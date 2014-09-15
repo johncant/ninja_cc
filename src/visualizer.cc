@@ -38,6 +38,8 @@ static void resize_callback(GLFWwindow* window, int width, int height) {
 void Visualizer::configure(double width, double height) {
   glViewport(0, 0, nearbyint(width), nearbyint(height));
   visual->configure(width, height);
+
+  // The resize event doesn't make glfwWaitEvents return, so
   draw();
 }
 
@@ -81,6 +83,7 @@ void Visualizer::initialize() {
   }
 
   glfwMakeContextCurrent(pimpl->window);
+  visual->initialize();
   glfwSetErrorCallback(NULL);
 }
 
@@ -97,6 +100,7 @@ Visualizer::~Visualizer() {
     glfwDestroyWindow(pimpl->window);
     glfwTerminate();
   }
+  delete pimpl;
   delete visual;
 }
 

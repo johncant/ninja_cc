@@ -3,8 +3,12 @@
 
 #include "sonic_medium.h"
 
+class WavesVisualImpl;
+
 class WavesVisual {
+  WavesVisualImpl* pimpl;
   public:
+  ~WavesVisual();
   WavesVisual(const SonicMedium& medium);
   void initialize();
   void configure(double w, double h);
