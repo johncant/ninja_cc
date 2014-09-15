@@ -9,7 +9,7 @@ class VisualWrapperBase {
   friend class Visualizer;
   protected:
   virtual void draw()=0;
-  virtual void configure()=0;
+  virtual void configure(double w, double h)=0;
   virtual void initialize()=0;
   virtual ~VisualWrapperBase() {};
 };
@@ -23,23 +23,26 @@ class VisualWrapper : public VisualWrapperBase {
   ~VisualWrapper() {}
   // Delegate everything
   void draw() { visual.draw(); }
-  void configure() { visual.configure(); }
+  void configure(double w, double h) { visual.configure(w, h); }
   void initialize() { visual.initialize(); }
 };
 
 
 // Fake singleton - only make one of these please!
 class Visualizer {
+  friend class VisualizerImpl;
   VisualizerImpl* mkimpl();
+
+  void initialize();
+  void configure(double w, double h); // Need dimensions
+  void draw();
+
   public:
 
   template <class visual_t>
   Visualizer(visual_t& v) : visual(new VisualWrapper<visual_t>(v)), pimpl(mkimpl()) {}
   ~Visualizer();
   void mainloop(); // Displays window
-  void initialize();
-  void configure(); // Need dimensions
-  void draw();
   template<class visual_t>
   void change_visual(visual_t& v) {
     delete visual;

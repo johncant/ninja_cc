@@ -7,7 +7,7 @@ class WavesVisual {
   public:
   WavesVisual(const SonicMedium& medium);
   void initialize();
-  void configure();
+  void configure(double w, double h);
   void draw();
 };
 

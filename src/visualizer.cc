@@ -4,17 +4,42 @@
 #include <OpenGL/gl3.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-
+#include <math.h>
+#include <map>
 #include "visualizer.h"
+
+static void error_callback(int error, const char* desc);
+static void resize_callback(GLFWwindow* window, int width, int height);
 
 class VisualizerImpl {
   friend class Visualizer;
   GLFWwindow* window;
+  double last_width, last_height;
+
+  friend void error_callback(int, const char*);
+  friend void resize_callback(GLFWwindow*, int, int);
+  static std::map<GLFWwindow*, Visualizer*> window_visualizer_map;
+
+  // Proxy to get round privateness from C callbacks
+  static void proxy_configure(Visualizer& v, double w, double h) { v.configure(w,h); }
 };
+
+std::map<GLFWwindow*, Visualizer*> VisualizerImpl::window_visualizer_map;
 
 static void error_callback(int error, const char* desc) {
   std::cerr << desc << std::endl;
 };
+
+static void resize_callback(GLFWwindow* window, int width, int height) {
+  Visualizer& v = *(VisualizerImpl::window_visualizer_map[window]);
+  VisualizerImpl::proxy_configure(v, double(width), double(height));
+}
+
+void Visualizer::configure(double width, double height) {
+  glViewport(0, 0, nearbyint(width), nearbyint(height));
+  visual->configure(width, height);
+  draw();
+}
 
 VisualizerImpl* Visualizer::mkimpl() {
   return new VisualizerImpl;
@@ -24,7 +49,11 @@ void Visualizer::mainloop() {
   initialize();
   // Never return
   while(!glfwWindowShouldClose(pimpl->window)) {
+
+    glfwMakeContextCurrent(pimpl->window);
+
     draw();
+
     glfwWaitEvents();
   }
 }
@@ -43,28 +72,22 @@ void Visualizer::initialize() {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   pimpl->window = glfwCreateWindow(800, 600, "foo", NULL, NULL);
+  VisualizerImpl::window_visualizer_map.insert(std::make_pair(pimpl->window, this));
 
-  glfwSetErrorCallback(NULL);
+  glfwSetWindowSizeCallback(pimpl->window, resize_callback);
 
   if (!pimpl->window) {
     glfwTerminate();
   }
 
   glfwMakeContextCurrent(pimpl->window);
+  glfwSetErrorCallback(NULL);
 }
 
 void Visualizer::draw() {
   glfwMakeContextCurrent(pimpl->window);
 
-  float ratio;
-  int width, height;
-
-  glfwGetFramebufferSize(pimpl->window, &width, &height);
-
-  ratio = width / (float) height;
-  glViewport(0, 0, width, height);
-  glClearColor(1.0, 0.0, 0.0, 1.0);
-  glClear(GL_COLOR_BUFFER_BIT);
+  visual->draw();
 
   glfwSwapBuffers(pimpl->window);
 }
