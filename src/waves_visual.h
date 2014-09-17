@@ -7,6 +7,9 @@ class WavesVisualImpl;
 
 class WavesVisual {
   WavesVisualImpl* pimpl;
+  const SonicMedium& sonic_medium;
+
+
   public:
   ~WavesVisual();
   WavesVisual(const SonicMedium& medium);

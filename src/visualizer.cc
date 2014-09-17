@@ -84,6 +84,9 @@ void Visualizer::initialize() {
 
   glfwMakeContextCurrent(pimpl->window);
   visual->initialize();
+
+  configure(800, 600);
+
   glfwSetErrorCallback(NULL);
 }
 

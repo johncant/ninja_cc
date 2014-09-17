@@ -27,6 +27,9 @@ class StillAnimator {
     return origins;
   }
 
+  Point3D get_position() {
+    return pos;
+  }
 };
 
 #endif

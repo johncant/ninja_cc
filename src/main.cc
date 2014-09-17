@@ -11,10 +11,12 @@ int main(int argc, char** argv) {
 
   SonicMedium medium;
 
-  StillAnimator animator(Point3D(-3.0, 0.0, 0.0));
+  StillAnimator animator0(Point3D(-0.0, 0.2, 0.0));
+  StillAnimator animator1(Point3D(-0.0, -0.2, 0.0));
   SineGenerator generator(1.0, 0, 440);
 
-  PointSoundSource<StillAnimator, SineGenerator> sound_source(medium, animator, generator);
+  PointSoundSource<StillAnimator, SineGenerator> sound_source0(medium, animator0, generator);
+  PointSoundSource<StillAnimator, SineGenerator> sound_source1(medium, animator1, generator);
 
   AntiSound anc(medium);
 

@@ -9,6 +9,8 @@ class AbstractSoundSource {
 
   virtual double evaluate(double time, const Point3D &pt) = 0;
 
+  virtual bool is_fixed_point() = 0;
+  virtual Point3D position() = 0;
 };
 
 #endif

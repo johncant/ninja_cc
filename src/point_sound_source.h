@@ -23,6 +23,8 @@ template <
 
   double evaluate(const double time, const Point3D &pt);
 
+  bool is_fixed_point();
+  Point3D position();
 };
 
 // Impl
@@ -50,6 +52,19 @@ template <
   }
 
   return sound_value;
+}
+
+template <
+  class animator_t,
+  class generator_t
+> bool PointSoundSource<animator_t, generator_t>::is_fixed_point() { return true; /* This is a lie, but ok if we're moving much slower than the speed of sound and close to all receivers */}
+
+// Again, this is totally wrong. Just for testing
+template <
+  class animator_t,
+  class generator_t
+> Point3D PointSoundSource<animator_t, generator_t>::position() {
+  return animator.get_position();
 }
 
 #endif

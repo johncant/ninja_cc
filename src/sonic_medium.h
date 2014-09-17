@@ -6,9 +6,9 @@
 #include <vector>
 
 class SonicMedium {
+  public:
   std::vector<AbstractSoundSource*> sound_sources;
 
-  public:
   template <class sound_source_t>
   void add_sound_source(sound_source_t& s) {
     sound_sources.push_back((AbstractSoundSource*) &s);
