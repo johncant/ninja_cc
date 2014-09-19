@@ -9,13 +9,14 @@ class WavesVisual {
   WavesVisualImpl* pimpl;
   const SonicMedium& sonic_medium;
 
-
   public:
   ~WavesVisual();
   WavesVisual(const SonicMedium& medium);
   void initialize();
   void configure(double w, double h);
   void draw();
+
+  void show_radius(double r);
 };
 
 #endif

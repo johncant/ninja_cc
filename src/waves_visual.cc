@@ -146,7 +146,7 @@ void WavesVisual::draw() {
   glUniform3fv(glGetUniformLocation(pimpl->program, "point_sound_origins"), 16, sound_source_point);
   glUniform3fv(glGetUniformLocation(pimpl->program, "point_sound_a_w0_phi"), 16, sound_source_a_w0_phi);
   glUniform1f(glGetUniformLocation(pimpl->program, "sound_speed"), 342.0);
-  glUniform1f(glGetUniformLocation(pimpl->program, "value_scale"), 1.0);
+  glUniform1f(glGetUniformLocation(pimpl->program, "value_scale"), 100.0);
 
   glUniformMatrix4fv(glGetUniformLocation(pimpl->program, "unprojection_matrix"), 1, false, pimpl->unprojection_matrix);
 
@@ -164,6 +164,8 @@ void WavesVisual::draw() {
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
 }
+
+void WavesVisual::show_radius(double radius) { pimpl->show_radius = radius; }
 
 WavesVisualImpl::WavesVisualImpl() {
   center[0] = 0; center[1] = 0; center[2] = 0;
