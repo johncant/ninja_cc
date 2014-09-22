@@ -13,12 +13,13 @@ int main(int argc, char** argv) {
 
   SonicMedium medium;
 
-  StillAnimator animator0(Point3D(-8.0, 4, 0.0));
-  StillAnimator animator1(Point3D(-8.0, -4, 0.0));
-  SineGenerator generator(1.0, 0, 440);
+  StillAnimator animator0(Point3D(-8.0, 3.8864, 0.0));
+  StillAnimator animator1(Point3D(-8.0, -3.8864, 0.0));
+  SineGenerator g0(1.0, 440, 0);
+  SineGenerator g1(1.0, 440, 0);
 
-  PointSoundSource<StillAnimator, SineGenerator> sound_source0(medium, animator0, generator);
-  PointSoundSource<StillAnimator, SineGenerator> sound_source1(medium, animator1, generator);
+  PointSoundSource<StillAnimator, SineGenerator> sound_source0(medium, animator0, g0);
+  PointSoundSource<StillAnimator, SineGenerator> sound_source1(medium, animator1, g1);
 
   Controller c;
   DigitalSystem<Controller> ds(c);
@@ -95,7 +96,7 @@ int main(int argc, char** argv) {
 
   WavesVisual wv(medium);
 
-  wv.show_radius(20);
+  wv.show_radius(2);
 
   Visualizer v(wv);
 

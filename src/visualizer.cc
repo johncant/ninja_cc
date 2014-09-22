@@ -68,12 +68,12 @@ void Visualizer::initialize() {
   glfwInit();
   //glewInit();
 
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  pimpl->window = glfwCreateWindow(800, 600, "foo", NULL, NULL);
+  pimpl->window = glfwCreateWindow(890, 156, "foo", NULL, NULL);
   VisualizerImpl::window_visualizer_map.insert(std::make_pair(pimpl->window, this));
 
   glfwSetWindowSizeCallback(pimpl->window, resize_callback);
@@ -85,7 +85,7 @@ void Visualizer::initialize() {
   glfwMakeContextCurrent(pimpl->window);
   visual->initialize();
 
-  configure(800, 600);
+  configure(890, 156);
 
   glfwSetErrorCallback(NULL);
 }

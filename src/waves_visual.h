@@ -7,11 +7,10 @@ class WavesVisualImpl;
 
 class WavesVisual {
   WavesVisualImpl* pimpl;
-  const SonicMedium& sonic_medium;
 
   public:
   ~WavesVisual();
-  WavesVisual(const SonicMedium& medium);
+  WavesVisual(SonicMedium& medium);
   void initialize();
   void configure(double w, double h);
   void draw();

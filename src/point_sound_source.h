@@ -22,6 +22,7 @@ template <
   PointSoundSource(SonicMedium& _sm, animator_t& a, generator_t& g);
 
   double evaluate(const double time, const Point3D &pt);
+  double evaluate_raw(const double time);
 
   bool is_fixed_point();
   Point3D position();
@@ -36,6 +37,14 @@ template <
   sm.add_sound_source(*this);
 }
 
+
+template <
+  class animator_t,
+  class generator_t
+> double PointSoundSource<animator_t, generator_t>::evaluate_raw(const double time) {
+  return generator.evaluate(time);
+}
+
 template <
   class animator_t,
   class generator_t
@@ -47,8 +56,8 @@ template <
   Point3D zero(0, 0, 0);
 
   for(sound_origin_t::const_iterator it = sound_origins.begin(); it != sound_origins.end(); it++) {
-
-    sound_value += generator.evaluate(it->get<0>())*fmin(1, 1/boost::geometry::distance(it->get<1>(), pt));
+    float time_emitted =
+    sound_value += evaluate_raw(it->get<0>())*fmin(1, 1/boost::geometry::distance(it->get<1>(), pt));
   }
 
   return sound_value;

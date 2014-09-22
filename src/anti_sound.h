@@ -20,8 +20,12 @@ class Speaker : public AbstractSoundSource {
   double evaluate(double time, const Point3D &pt) {
     double dist = boost::geometry::distance(pt, pos);
 
+    return evaluate_raw(time - dist/config_t::sound_speed());
+  }
+
+  double evaluate_raw(double time) {
     if (evaluator) {
-      return evaluator(time - dist/config_t::sound_speed());
+      return evaluator(time);
     } else {
       return 0;
     }
