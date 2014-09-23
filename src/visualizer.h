@@ -11,6 +11,7 @@ class VisualWrapperBase {
   virtual void draw()=0;
   virtual void configure(double w, double h)=0;
   virtual void initialize()=0;
+  virtual void time(double t)=0;
   virtual ~VisualWrapperBase() {};
 };
 
@@ -25,6 +26,7 @@ class VisualWrapper : public VisualWrapperBase {
   void draw() { visual.draw(); }
   void configure(double w, double h) { visual.configure(w, h); }
   void initialize() { visual.initialize(); }
+  void time(double t) { visual.time(t); }
 };
 
 

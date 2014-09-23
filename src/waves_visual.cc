@@ -149,6 +149,7 @@ void WavesVisual::draw() {
 
   glUseProgram(pimpl->program);
 
+  pimpl->build_waves_texture();
 
   GLfloat sound_source_point[64*3];
   GLfloat sound_source_a_w0_phi[64*3];
@@ -175,7 +176,7 @@ void WavesVisual::draw() {
   glUniform3fv(glGetUniformLocation(pimpl->program, "point_sound_a_w0_phi"), 64, sound_source_a_w0_phi);
   glUniform1fv(glGetUniformLocation(pimpl->program, "point_sound_min_distance"), 64, pimpl->point_sound_min_distance);
   glUniform1f(glGetUniformLocation(pimpl->program, "sound_speed"), 342.0);
-  glUniform1f(glGetUniformLocation(pimpl->program, "value_scale"), 100.0);
+  glUniform1f(glGetUniformLocation(pimpl->program, "value_scale"), 10.0);
   glUniform1f(glGetUniformLocation(pimpl->program, "waves_texture_scale"), pimpl->waves_texture_scale);
   glUniform1f(glGetUniformLocation(pimpl->program, "waves_texture_pixel_height"), pimpl->waves_texture_pixel_height);
 
@@ -201,6 +202,9 @@ void WavesVisual::draw() {
 }
 
 void WavesVisual::show_radius(double radius) { pimpl->show_radius = radius; pimpl->build_unprojection_matrix(); }
+
+void WavesVisual::time(double t) { pimpl->time = t; }
+void WavesVisual::time_advance(double t) { pimpl->time += t; }
 
 WavesVisualImpl::WavesVisualImpl(SonicMedium& sm) :
   sonic_medium(sm),

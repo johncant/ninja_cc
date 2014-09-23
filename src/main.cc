@@ -8,10 +8,17 @@
 #include "visualizer.h"
 #include "digital_system.h"
 #include "controller.h"
+#include <random>
 
 int main(int argc, char** argv) {
 
   SonicMedium medium;
+
+  std::default_random_engine generator;
+
+  std::uniform_real_distribution<double> distribution_x(-20.0,20.0);
+  std::uniform_real_distribution<double> distribution_y(-10.0,0.0);
+  std::uniform_real_distribution<double> distribution_z(-1.0,1.0);
 
   StillAnimator animator0(Point3D(-8.0, 3.8864, 0.0));
   StillAnimator animator1(Point3D(-8.0, -3.8864, 0.0));
@@ -20,6 +27,16 @@ int main(int argc, char** argv) {
 
   PointSoundSource<StillAnimator, SineGenerator> sound_source0(medium, animator0, g0);
   PointSoundSource<StillAnimator, SineGenerator> sound_source1(medium, animator1, g1);
+
+//  for (int i=0; i<= 20; i++) {
+//    StillAnimator random_animator(Point3D(
+//      distribution_x(generator),
+//      distribution_y(generator),
+//      distribution_z(generator)
+//    ));
+//    SineGenerator g0(0.25, 55*pow(2, double(i)/4.0), 0);
+//    PointSoundSource<StillAnimator, SineGenerator> sound_source0(medium, random_animator, g0);
+//  }
 
   Controller c;
   DigitalSystem<Controller> ds(c);
@@ -96,7 +113,7 @@ int main(int argc, char** argv) {
 
   WavesVisual wv(medium);
 
-  wv.show_radius(2);
+  wv.show_radius(20);
 
   Visualizer v(wv);
 

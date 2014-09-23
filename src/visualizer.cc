@@ -53,10 +53,14 @@ void Visualizer::mainloop() {
   while(!glfwWindowShouldClose(pimpl->window)) {
 
     glfwMakeContextCurrent(pimpl->window);
-
+    double t = glfwGetTime();
+    visual->time(t*0.001);
+    std::cout << " timer: " << t << std::endl;
     draw();
 
-    glfwWaitEvents();
+//    glfwWaitEvents();
+    glfwPollEvents();
+
   }
 }
 
