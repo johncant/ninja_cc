@@ -255,21 +255,16 @@ void WavesVisualImpl::build_waves_texture() {
   unsigned int tex_width;
   double scale;
 
-  std::cerr << width << ", " << height << std::endl;
 
   tex_width = nearbyint(sqrt(pow(width, 2) + pow(height, 2)))*2;
   scale = 2*show_radius/double((width > height) ? height : width); // Distance units per pixel
-  std::cout << scale << std::endl;
 
   waves_texture_scale = 1/(scale*0.5*double(tex_width)); // texels per distance unit
-  std::cout << waves_texture_pixel_height << std::endl;
 
   _TextureIndex t(tex_width, 64, 1);
 
   if (wave_tex_data) delete[] wave_tex_data;
   wave_tex_data = new float[t.size()];
-
-  std::cerr << "writing" << std::endl;
 
 
   for (unsigned int si=0; si < 64 ; si++) {
@@ -314,8 +309,6 @@ void WavesVisualImpl::build_waves_texture() {
   glTexParameteri(GL_TEXTURE_1D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
   glTexImage2D(GL_TEXTURE_1D_ARRAY, 0, GL_RED, tex_width, 64, 0, GL_RED, GL_FLOAT, wave_tex_data);
-
-  std::cerr << "Supplied texture" << std::endl;
 
 }
 
@@ -419,9 +412,6 @@ float WavesVisualImpl::min_distance_visible_rectangle_to_point(const Point3D& pt
     //std::cout << "CANTS DISTANCE ";
 
     // Closest point in-plane to pt is inside our viewing rectangle.
-    std::cout << p_minus_c[0]*z[0]
-         + p_minus_c[1]*z[1]
-         + p_minus_c[2]*z[2] << std::endl;
 
     return p_minus_c_dot_n;
 

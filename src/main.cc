@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 //    PointSoundSource<StillAnimator, SineGenerator> sound_source0(medium, random_animator, g0);
 //  }
 
-  Controller c;
+  DigitalSystem<Controller>::Controller c;
   DigitalSystem<Controller> ds(c);
   AntiSound<DigitalSystem<Controller> > anc(medium, ds);
 
