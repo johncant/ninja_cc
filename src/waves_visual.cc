@@ -43,6 +43,7 @@ class WavesVisualImpl {
   double waves_texture_pixel_height, waves_texture_scale;
   float point_sound_min_distance[64];
   float* wave_tex_data;
+  double time_scale;
 
 };
 
@@ -203,12 +204,20 @@ void WavesVisual::draw() {
 
 void WavesVisual::show_radius(double radius) { pimpl->show_radius = radius; pimpl->build_unprojection_matrix(); }
 
-void WavesVisual::time(double t) { pimpl->time = t; }
+void WavesVisual::time_scale(double ts) {
+  pimpl->time_scale = ts;
+}
+
+void WavesVisual::time(double t) {
+  pimpl->time = t*pimpl->time_scale;
+  std::cout << " timer: " << pimpl->time << std::endl;
+}
 void WavesVisual::time_advance(double t) { pimpl->time += t; }
 
 WavesVisualImpl::WavesVisualImpl(SonicMedium& sm) :
   sonic_medium(sm),
-  wave_tex_data(NULL)
+  wave_tex_data(NULL),
+  time_scale(1)
   {
   center[0] = 0; center[1] = 0; center[2] = 0;
        y[0] = 0;      y[1] = 1;      y[2] = 0;

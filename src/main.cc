@@ -114,6 +114,7 @@ int main(int argc, char** argv) {
   WavesVisual wv(medium);
 
   wv.show_radius(20);
+  wv.time_scale(0.001);
 
   Visualizer v(wv);
 

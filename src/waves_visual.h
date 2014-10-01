@@ -18,6 +18,7 @@ class WavesVisual {
   void show_radius(double r);
   void time(double t);
   void time_advance(double t);
+  void time_scale(double ts);
 };
 
 #endif

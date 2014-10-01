@@ -54,8 +54,7 @@ void Visualizer::mainloop() {
 
     glfwMakeContextCurrent(pimpl->window);
     double t = glfwGetTime();
-    visual->time(t*0.001);
-    std::cout << " timer: " << t << std::endl;
+    visual->time(t);
     draw();
 
 //    glfwWaitEvents();
