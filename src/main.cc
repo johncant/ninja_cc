@@ -109,7 +109,7 @@ int main(int argc, char** argv) {
 
   std::cout << "AntiSound initialized" << std::endl;
 
-  std::cout << medium.evaluate(10, Point3D(2.0, 0.0, 0.0)) << std::endl;
+//  std::cout << medium.evaluate(10, Point3D(2.0, 0.0, 0.0)) << std::endl;
 
   WavesVisual wv(medium);
 

@@ -93,10 +93,12 @@ class DigitalSystem {
     void operator()(const TimerEvent & timer_event) {
       system.controller.timer(time);
       std::cout << "TimerEvent " << time << std::endl;
+      system.last_timer_event_time = time;
     }
 
     void operator()(const MicEvent & mic_event) {
       std::cout << "MicEvent" << time << std::endl;
+      system.last_mic_event_time = time;
     }
   };
 };
@@ -116,23 +118,17 @@ void DigitalSystem<controller_t, config_t>::time_advance_to(double to_time) {
   typedef std::multimap<double, EitherEvent> EventsContainer;
   EventsContainer pending_events;
 
-  std::cout << "Advancing to " << to_time << std::endl;
-
   for ( double time = last_mic_event_time+controller_config.mic_samples*controller_config.sample_period
       ; time <= to_time
       ; time += controller_config.mic_samples*controller_config.sample_period) {
     pending_events.insert(std::make_pair(time, EitherEvent( MicEvent() ) ) );
   }
 
-  last_mic_event_time += controller_config.mic_samples*controller_config.sample_period;
-
   for ( double time = last_timer_event_time+controller_config.timer_period
       ; time <= to_time
       ; time += controller_config.timer_period) {
     pending_events.insert(std::make_pair(time, EitherEvent(TimerEvent())));
   }
-
-  last_timer_event_time += controller_config.timer_period;
 
   // Dig out events in chronological sequence
 
@@ -150,6 +146,7 @@ void DigitalSystem<controller_t, config_t>::time_advance_to(double to_time) {
 template <template <class adapter_t> class controller_t, class config_t>
 double DigitalSystem<controller_t, config_t>::evaluate_speaker(int index, double time) {
 
+//  std::cout << "Evaluating speaker" << 
   double dt = time - playback_time;
   if (dt > 0.0) time_advance_to(time);
 

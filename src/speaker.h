@@ -19,8 +19,10 @@ class Speaker : public AbstractSoundSource {
 
   double evaluate_raw(double time) {
     if (evaluator) {
+      //std::cout << evaluator << " Evaluating at " << time << std::endl;
       return evaluator(time);
     } else {
+      std::cout << "No evaluator present" << std::endl;
       return 0;
     }
   }

@@ -41,7 +41,8 @@ class Controller {
   }
 
   void timer(double time) {
-    int n_out_samples = floor(time - last_output_time);
+    std::cout << "Evaluating controller at time " << time << std::endl;
+    int n_out_samples = 100;
     std::vector<float> values(n_out_samples);
 
     for(std::vector<float>::iterator it = values.begin()
@@ -50,6 +51,8 @@ class Controller {
       *it = 0.5*sin(sin_phase1) + 0.5*sin(sin_phase2);
       sin_phase1 += 2*M_PI*435*self_config.sample_period;
       sin_phase2 += 2*M_PI*445*self_config.sample_period;
+      if (sin_phase1 > 2*M_PI) sin_phase1 -= 2*M_PI;
+      if (sin_phase2 > 2*M_PI) sin_phase2 -= 2*M_PI;
     }
 
     for(typename std::vector<typename adapter_t::SpeakerAdapter>::iterator it = adapter->speakers.begin()

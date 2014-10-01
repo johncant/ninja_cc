@@ -210,7 +210,7 @@ void WavesVisual::time_scale(double ts) {
 
 void WavesVisual::time(double t) {
   pimpl->time = t*pimpl->time_scale;
-  std::cout << " timer: " << pimpl->time << std::endl;
+//  std::cout << " timer: " << pimpl->time << std::endl;
 }
 void WavesVisual::time_advance(double t) { pimpl->time += t; }
 
