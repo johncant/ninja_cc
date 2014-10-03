@@ -1,19 +1,14 @@
 #ifndef __DIGITAL_SYSTEM_H__
 #define __DIGITAL_SYSTEM_H__
 
-#include "boost/function.hpp"
-#include "boost/bind.hpp"
-#include "anti_sound_default_config.h"
-#include "digital_system_adapter.h"
 #include <math.h>
 #include <boost/circular_buffer.hpp>
 #include <boost/variant.hpp>
-
-// Controller
-//   - add_speaker
-//   - add_mic
-//   - mic_data
-//   - speaker_sink
+#include <boost/function.hpp>
+#include <boost/bind.hpp>
+#include "anti_sound_default_config.h"
+#include "digital_system_adapter.h"
+#include "microphone.h"
 
 // Digital Antisound system
 
@@ -49,6 +44,18 @@ class DigitalSystem {
     }
   };
 
+  void synchronize_outputs(double time) {
+    int already_read_output_count = ceil(time/controller_config.sample_period);
+    for( typename std::vector<SpeakerAdapter>::iterator it = adapter.speakers.begin()
+       ; it != adapter.speakers.end()
+       ; it++) {
+      // Fill with zeros. This is like an underflow, and it means that subsequent outputs will not write into the future.
+      while (it->all_sound_values.size() < already_read_output_count + 100) {
+        it->all_sound_values.push_back(0);
+      }
+    }
+  }
+
   // We pass one of these to the controller
   class Adapter {
     friend class DigitalSystem<controller_t, config_t>;
@@ -76,6 +83,10 @@ class DigitalSystem {
   double evaluate_speaker(int index, double time);
   DigitalSystem(Controller& ctrlr);
   template <class spkr_t> void add_speaker(spkr_t& spkr);
+  template <class mic_t> void add_microphone(mic_t& mic);
+
+  std::vector<Microphone*> mics;
+
   void time_advance_to(double to_time);
 
   private:
@@ -91,14 +102,40 @@ class DigitalSystem {
     EventVisitor(DigitalSystem<controller_t, config_t>& sys, double t) : system(sys), time(t) { }
 
     void operator()(const TimerEvent & timer_event) {
-      system.controller.timer(time);
+
+      if (time > system.playback_time) {
+        system.synchronize_outputs(system.playback_time);
+      }
+
       std::cout << "TimerEvent " << time << std::endl;
+      system.controller.timer(time);
       system.last_timer_event_time = time;
+
+      system.playback_time = time;
     }
 
     void operator()(const MicEvent & mic_event) {
-      std::cout << "MicEvent" << time << std::endl;
-      system.last_mic_event_time = time;
+
+      if (time > system.playback_time) {
+        system.synchronize_outputs(system.playback_time);
+      }
+
+      for ( int mic_n=0
+          ; mic_n < system.mics.size()
+          ; mic_n++) {
+        std::vector<float> samples(system.controller_config.mic_samples);
+        for (int i=0; i<system.controller_config.mic_samples; i++) {
+          double sample_time = time - (system.controller_config.mic_samples - i)*system.controller_config.sample_period;
+          samples[i] = system.mics[mic_n]->evaluate(sample_time);
+        }
+
+        system.controller.on_mic_input(mic_n, samples);
+        samples.clear();
+        system.last_mic_event_time = time;
+
+
+        system.playback_time = time;
+      }
     }
   };
 };
@@ -130,6 +167,13 @@ void DigitalSystem<controller_t, config_t>::time_advance_to(double to_time) {
     pending_events.insert(std::make_pair(time, EitherEvent(TimerEvent())));
   }
 
+
+  for ( double time = last_timer_event_time+controller_config.timer_period
+      ; time <= to_time
+      ; time += controller_config.timer_period) {
+    pending_events.insert(std::make_pair(time, EitherEvent(TimerEvent())));
+  }
+
   // Dig out events in chronological sequence
 
 
@@ -140,7 +184,6 @@ void DigitalSystem<controller_t, config_t>::time_advance_to(double to_time) {
     boost::apply_visitor(event_visitor, it->second);
   }
 
-  playback_time = to_time;
 }
 
 template <template <class adapter_t> class controller_t, class config_t>
@@ -173,5 +216,12 @@ void DigitalSystem<controller_t, config_t>::add_speaker(spkr_t& spkr) {
   controller.configure();
 }
 
+// TODO - not really as generic as it looks
+template <template <class adapter_t> class controller_t, class config_t>
+template <class mic_t>
+void DigitalSystem<controller_t, config_t>::add_microphone(mic_t& mic) {
+  mics.push_back(&mic);
+  controller.configure();
+}
 
 #endif

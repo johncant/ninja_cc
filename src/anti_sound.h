@@ -3,16 +3,12 @@
 
 #include <boost/geometry.hpp>
 #include <boost/geometry/algorithms/distance.hpp>
+#include <boost/function.hpp>
+#include <boost/bind.hpp>
 #include "sonic_medium.h"
-#include "boost/function.hpp"
 #include "anti_sound_default_config.h"
 #include "speaker.h"
-
-class Microphone {
-  public:
-  Microphone(const Point3D& pos) {
-  }
-};
+#include "microphone.h"
 
 template <class system_t, class config_t = AntiSoundDefaultConfig>
 class AntiSound {
@@ -27,8 +23,10 @@ class AntiSound {
   public:
   AntiSound(SonicMedium &sm, system_t& sys) : medium(sm), system(sys) { }
 
-  void add_microphone(const Microphone& mic) {
+  void add_microphone(Microphone& mic) {
     microphones.push_back(mic);
+    system.add_microphone(mic);
+    mic.evaluator = boost::bind(&SonicMedium::evaluate, medium, _1, mic.pos);
   }
 
   void add_speaker(Speaker<config_t>& spkr) {

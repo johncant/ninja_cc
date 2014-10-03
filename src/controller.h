@@ -36,34 +36,38 @@ class Controller {
     // Adapter has changed its config, i.e. number of speakers, mics.
   }
 
-  void on_mic_input(int mic, int length, double* data) {
-    std::cout << "receiving " << length << " samples from mic" << mic << std::endl;
+  void on_mic_input(int mic, std::vector<float> data) {
+    std::cout << "receiving " << data.size() << " samples from mic" << mic << std::endl;
+    if (mic < adapter->speakers.size()) {
+      adapter->speakers[mic].output(data);
+    }
   }
 
   void timer(double time) {
-    std::cout << "Evaluating controller at time " << time << std::endl;
-    int n_out_samples = 100;
-    std::vector<float> values(n_out_samples);
-
-    for(std::vector<float>::iterator it = values.begin()
-      ; it != values.end()
-      ; it++) {
-      *it = 0.5*sin(sin_phase1) + 0.5*sin(sin_phase2);
-      sin_phase1 += 2*M_PI*435*self_config.sample_period;
-      sin_phase2 += 2*M_PI*445*self_config.sample_period;
-      if (sin_phase1 > 2*M_PI) sin_phase1 -= 2*M_PI;
-      if (sin_phase2 > 2*M_PI) sin_phase2 -= 2*M_PI;
-    }
-
-    for(typename std::vector<typename adapter_t::SpeakerAdapter>::iterator it = adapter->speakers.begin()
-      ; it != adapter->speakers.end()
-      ; it++) {
-      it->output(values);
-    }
-
-    last_output_time += double(n_out_samples)*self_config.sample_period;
-    std::cout << "Wrote output to speakers" << std::endl;
+//    std::cout << "Evaluating controller at time " << time << std::endl;
+//    int n_out_samples = 100;
+//    std::vector<float> values(n_out_samples);
+//
+//    for(std::vector<float>::iterator it = values.begin()
+//      ; it != values.end()
+//      ; it++) {
+//      *it = 0.5*sin(sin_phase1) + 0.5*sin(sin_phase2);
+//      sin_phase1 += 2*M_PI*435*self_config.sample_period;
+//      sin_phase2 += 2*M_PI*445*self_config.sample_period;
+//      if (sin_phase1 > 2*M_PI) sin_phase1 -= 2*M_PI;
+//      if (sin_phase2 > 2*M_PI) sin_phase2 -= 2*M_PI;
+//    }
+//
+//    for(typename std::vector<typename adapter_t::SpeakerAdapter>::iterator it = adapter->speakers.begin()
+//      ; it != adapter->speakers.end()
+//      ; it++) {
+//      it->output(values);
+//    }
+//
+//    last_output_time += double(n_out_samples)*self_config.sample_period;
+//    std::cout << "Wrote output to speakers" << std::endl;
   }
 };
 
 #endif
+

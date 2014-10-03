@@ -217,7 +217,8 @@ void WavesVisual::time_advance(double t) { pimpl->time += t; }
 WavesVisualImpl::WavesVisualImpl(SonicMedium& sm) :
   sonic_medium(sm),
   wave_tex_data(NULL),
-  time_scale(1)
+  time_scale(1),
+  time(0)
   {
   center[0] = 0; center[1] = 0; center[2] = 0;
        y[0] = 0;      y[1] = 1;      y[2] = 0;
