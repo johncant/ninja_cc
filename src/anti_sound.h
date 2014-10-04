@@ -26,7 +26,7 @@ class AntiSound {
   void add_microphone(Microphone& mic) {
     microphones.push_back(mic);
     system.add_microphone(mic);
-    mic.evaluator = boost::bind(&SonicMedium::evaluate, medium, _1, mic.pos);
+    mic.evaluator = boost::bind(&SonicMedium::evaluate, &medium, _1, mic.pos);
   }
 
   void add_speaker(Speaker<config_t>& spkr) {

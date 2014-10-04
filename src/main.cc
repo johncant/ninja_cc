@@ -20,12 +20,12 @@ int main(int argc, char** argv) {
   std::uniform_real_distribution<double> distribution_y(-10.0,0.0);
   std::uniform_real_distribution<double> distribution_z(-1.0,1.0);
 
-  StillAnimator animator0(Point3D(-8.0, 3.8864, 0.0));
+//  StillAnimator animator0(Point3D(-8.0, 3.8864, 0.0));
 //  StillAnimator animator1(Point3D(-8.0, -3.8864, 0.0));
-  SineGenerator g0(1.0, 440, 0);
+//  SineGenerator g0(1.0, 440, 0);
 //  SineGenerator g1(1.0, 440, 0);
 
-  PointSoundSource<StillAnimator, SineGenerator> sound_source0(medium, animator0, g0);
+//  PointSoundSource<StillAnimator, SineGenerator> sound_source0(medium, animator0, g0);
 //  PointSoundSource<StillAnimator, SineGenerator> sound_source1(medium, animator1, g1);
 
 //  for (int i=0; i<= 20; i++) {
@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
   DigitalSystem<Controller> ds(c);
   AntiSound<DigitalSystem<Controller> > anc(medium, ds);
 
-  Microphone mic0(Point3D(0.0, 0.0, 0.0));
+  Microphone mic0(Point3D(0.0, -0.0, 0.0));
 //                        mic1(Point3D(0.0, -1.0, 0.0)),
 //                        mic2(Point3D(0.0, -2.0, 0.0)),
 //                        mic3(Point3D(0.0, -3.0, 0.0)),
@@ -58,7 +58,8 @@ int main(int argc, char** argv) {
 //                        mic13(Point3D(0.0,  6.0, 0.0)),
 //                        mic14(Point3D(0.0,  7.0, 0.0));
 
-  Speaker<AntiSoundDefaultConfig> spkr0(Point3D(1.0, 0.0, 0.0));
+  Speaker<AntiSoundDefaultConfig> spkr0(Point3D(0.0, 8.0, 0.0));
+  Speaker<AntiSoundDefaultConfig> spkr1(Point3D(0.0, -8.0, 0.0));
 //                     spkr1(Point3D(1.0, -1.0, 0.0)),
 //                     spkr2(Point3D(1.0, -2.0, 0.0)),
 //                     spkr3(Point3D(1.0, -3.0, 0.0)),
@@ -91,6 +92,7 @@ int main(int argc, char** argv) {
 //  anc.add_microphone(mic14);
 
   anc.add_speaker(spkr0);
+  anc.add_speaker(spkr1);
 //  anc.add_speaker(spkr1);
 //  anc.add_speaker(spkr2);
 //  anc.add_speaker(spkr3);

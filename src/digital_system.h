@@ -167,15 +167,7 @@ void DigitalSystem<controller_t, config_t>::time_advance_to(double to_time) {
     pending_events.insert(std::make_pair(time, EitherEvent(TimerEvent())));
   }
 
-
-  for ( double time = last_timer_event_time+controller_config.timer_period
-      ; time <= to_time
-      ; time += controller_config.timer_period) {
-    pending_events.insert(std::make_pair(time, EitherEvent(TimerEvent())));
-  }
-
   // Dig out events in chronological sequence
-
 
   for ( typename EventsContainer::iterator it = pending_events.begin()
       ; it != pending_events.end()

@@ -12,6 +12,7 @@ class Controller {
   double last_output_time;
   double sin_phase1;
   double sin_phase2;
+  bool pulse;
 
   public:
   Controller() {
@@ -28,6 +29,7 @@ class Controller {
 
     sin_phase1 = 0;
     sin_phase2 = 0;
+    pulse = true;
 
     return c;
   }
@@ -38,12 +40,27 @@ class Controller {
 
   void on_mic_input(int mic, std::vector<float> data) {
     std::cout << "receiving " << data.size() << " samples from mic" << mic << std::endl;
-    if (mic < adapter->speakers.size()) {
-      adapter->speakers[mic].output(data);
+    for(std::vector<float>::iterator it = data.begin(); it != data.end(); it++) {
+      std::cout << *it << ", ";
+    }
+    std::cout << std::endl;
+    if (mic == 0) {
+      std::cout << "Outputting through speaker 1 of " << adapter->speakers.size() << std::endl;
+      adapter->speakers[1].output(data);
     }
   }
 
   void timer(double time) {
+
+    std::vector<float> output;
+    if (pulse) {
+      output = std::vector<float>(100, 1.0);
+      pulse = false;
+    } else {
+      output = std::vector<float>(100, 0.0);
+    }
+
+    adapter->speakers[0].output(output);
 //    std::cout << "Evaluating controller at time " << time << std::endl;
 //    int n_out_samples = 100;
 //    std::vector<float> values(n_out_samples);
