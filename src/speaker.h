@@ -2,6 +2,7 @@
 #define __SPEAKER_H__
 
 #include <math.h>
+#include "abstract_sound_source.h"
 
 template <class config_t = AntiSoundDefaultConfig>
 class Speaker : public AbstractSoundSource {

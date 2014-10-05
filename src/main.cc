@@ -8,6 +8,7 @@
 #include "visualizer.h"
 #include "digital_system.h"
 #include "controller.h"
+#include "mic_generator.h"
 #include <random>
 
 int main(int argc, char** argv) {
@@ -19,6 +20,12 @@ int main(int argc, char** argv) {
   std::uniform_real_distribution<double> distribution_x(-20.0,20.0);
   std::uniform_real_distribution<double> distribution_y(-10.0,0.0);
   std::uniform_real_distribution<double> distribution_z(-1.0,1.0);
+
+  StillAnimator animator_real_pos0(Point3D(-8.0, 2, 0.0));
+  StillAnimator animator_real_pos1(Point3D(-8.0, -2, 0.0));
+  MicGenerator real_generator;
+  PointSoundSource<StillAnimator, MicGenerator> real_speaker0(medium, animator_real_pos0, real_generator);
+  PointSoundSource<StillAnimator, MicGenerator> real_speaker1(medium, animator_real_pos1, real_generator);
 
 //  StillAnimator animator0(Point3D(-8.0, 3.8864, 0.0));
 //  StillAnimator animator1(Point3D(-8.0, -3.8864, 0.0));
@@ -115,10 +122,11 @@ int main(int argc, char** argv) {
 
   WavesVisual wv(medium);
 
-  wv.show_radius(20);
-  wv.time_scale(0.001);
+  wv.show_radius(4);
+  wv.time_scale(1);
 
   Visualizer v(wv);
 
   v.mainloop();
 }
+

@@ -8,6 +8,4 @@ class Settings {
 
 };
 
-const double Settings::propagation_speed = 342;
-
 #endif
